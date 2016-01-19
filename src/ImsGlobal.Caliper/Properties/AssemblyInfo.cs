@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ImsGlobal.Caliper")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription(".NET client for Caliper that provides an implementation of the Caliper SensorAPI™")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Desire2Learn Incorporated")]
 [assembly: AssemblyProduct("ImsGlobal.Caliper")]
