@@ -13,7 +13,7 @@ namespace ImsGlobal.Caliper {
 
 		private const int DEFAULT_TIMEOUT = 10000;
 
-		public CaliperEndpointOptions( Uri host, string apiKey = null, int timeout = DEFAULT_TIMEOUT ) {
+		public CaliperEndpointOptions( Uri host, int timeout = DEFAULT_TIMEOUT ) {
 			if( host == null ) {
 				throw new ArgumentNullException( "host" );
 			}
@@ -22,8 +22,20 @@ namespace ImsGlobal.Caliper {
 			}
 
 			this.Host = host;
-			this.ApiKey = apiKey;
 			this.Timeout = timeout;
+		}
+
+		public CaliperEndpointOptions( Uri host, string apiKey, int timeout = DEFAULT_TIMEOUT ) : this(host, timeout) {
+			this.ApiKey = apiKey;
+		}
+
+		public CaliperEndpointOptions( Uri host, string authScheme, string authToken, int timeout = DEFAULT_TIMEOUT ) : this( host, timeout ) {
+			if( String.IsNullOrWhiteSpace( authScheme ) || String.IsNullOrWhiteSpace( authToken ) ) {
+				throw new ArgumentException( "authScheme and authToken can not be null, empty, or whitespace." );
+			}
+
+			this.AuthScheme = authScheme;
+			this.AuthToken = authToken;
 		}
 
 		/// <summary>
@@ -35,6 +47,16 @@ namespace ImsGlobal.Caliper {
 		/// The Caliper web API key.
 		/// </summary>
 		public string ApiKey { get; set; }
+
+		/// <summary>
+		/// The Caliper web API key.
+		/// </summary>
+		public string AuthScheme { get; private set; }
+
+		/// <summary>
+		/// The Caliper web API key.
+		/// </summary>
+		public string AuthToken { get; private set; }
 
 		/// <summary>
 		/// Connection timeout in milliseconds.

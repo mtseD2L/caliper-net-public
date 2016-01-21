@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,12 +20,15 @@ namespace ImsGlobal.Caliper.Protocol {
 		private readonly CaliperEndpointOptions _options;
 		private readonly string _sensorId;
 		private readonly JsonSerializerSettings _serializerSettings;
+		private readonly bool _hasAuth;
 
 		public CaliperClient( CaliperEndpointOptions options, string sensorId ) {
 			_options = options;
 			_sensorId = sensorId;
 			_serializerSettings = new JsonSerializerSettings();
 			_serializerSettings.ConfigureForNodaTime( DateTimeZoneProviders.Tzdb );
+
+			_hasAuth = !String.IsNullOrWhiteSpace( options.AuthScheme );
 		}
 
 		public async Task<bool> Send( IEnumerable<Event> events ) {
@@ -46,6 +50,10 @@ namespace ImsGlobal.Caliper.Protocol {
 			var content = new StringContent( json, Encoding.UTF8, "application/json" );
 
 			using( var client = new HttpClient() ) {
+
+				if( _hasAuth ) {
+					client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue( _options.AuthScheme, _options.AuthToken );
+				}
 
 				client.BaseAddress = _options.Host;
 				try {
